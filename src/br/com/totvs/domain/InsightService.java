@@ -13,13 +13,14 @@ public class InsightService {
     public List<Insight> generate(Analysis a) {
         List<Insight> insights = new ArrayList<>();
 
-       if (a.getSentiment() < this.alertThreshold) {
-           double probabilidadeCancelamento = (10.0 - a.getSentiment()) * 10;
-           insights.add(new RiskInsight("Cliente insatisfeito identificado no audio", 1, probabilidadeCancelamento));
-       }
-        if (a.getProductivity() >= 8.0) {
-            insights.add(new BusinessInsight("Abertura para venda do módulo TOTVS RM.", 2, 50000.00));
+        if (a.getSentiment() < this.alertThreshold) {
+            insights.add(new RiskInsight("Risco de Churn detectado!", 1, 80.0));
         }
+
+        if (a.getProductivity() >= 8.0) {
+            insights.add(new BusinessInsight("Oportunidade de Upsell!", 2, 50000.0));
+        }
+
         return insights;
     }
 }
