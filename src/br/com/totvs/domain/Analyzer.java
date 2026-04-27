@@ -8,7 +8,11 @@ public class Analyzer {
     }
 
     public Analysis analyze(Conversation conversation) {
-        String texto = conversation.getText().toLowerCase().trim();
+        String texto = java.text.Normalizer
+                .normalize(conversation.getText(), java.text.Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "")
+                .toLowerCase()
+                .trim();
 
         double notaProdutividade = 5.0;
         double notaSentimento = 8.0;

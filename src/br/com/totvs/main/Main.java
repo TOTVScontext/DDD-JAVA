@@ -10,7 +10,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.print(
                 "\n" +
-                "\u001B[38;2;80;160;255m████████╗\u001B[38;2;75;150;250m ██████╗\u001B[38;2;70;140;245m ████████╗\u001B[38;2;65;130;240m██╗   ██╗\u001B[38;2;60;120;235m███████╗\n" +
+                        "\u001B[38;2;80;160;255m████████╗\u001B[38;2;75;150;250m ██████╗\u001B[38;2;70;140;245m ████████╗\u001B[38;2;65;130;240m██╗   ██╗\u001B[38;2;60;120;235m███████╗\n" +
                         "\u001B[38;2;75;150;250m╚══██╔══╝\u001B[38;2;70;140;245m██╔═══██╗\u001B[38;2;65;130;240m╚══██╔══╝\u001B[38;2;60;120;235m██║   ██║\u001B[38;2;55;110;230m██╔════╝\n" +
                         "\u001B[38;2;70;140;245m   ██║\u001B[38;2;65;130;240m   ██║   ██║\u001B[38;2;60;120;235m   ██║\u001B[38;2;55;110;230m   ██║   ██║\u001B[38;2;50;100;225m███████╗\n" +
                         "\u001B[38;2;65;130;240m   ██║\u001B[38;2;60;120;235m   ██║   ██║\u001B[38;2;55;110;230m   ██║\u001B[38;2;50;100;225m   ╚██╗ ██╔╝\u001B[38;2;45;90;220m╚════██║\n" +
@@ -23,18 +23,17 @@ public class Main {
                         "\u001B[38;2;30;60;205m╚██████╗\u001B[38;2;25;50;200m╚██████╔╝██║ ╚████║   ██║   ███████╗██╔╝ ██╗   ██║\n" +
                         "\u001B[38;2;25;50;200m ╚═════╝\u001B[38;2;20;40;195m ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝\u001B[0m\n"
         );
-        System.out.println("\n--- Inteligencia de Interacoes Corporativas ---\n");
+        System.out.println("  Inteligencia de Interacoes Corporativas\n");
 
-
-        System.out.println("Insira o ID da reunião:");
+        System.out.print("ID da reuniao: ");
         String idConversa = scan.nextLine();
 
-        System.out.println("Insira o texto transcrito da reunião:");
+        System.out.print("Transcricao: ");
         String textoConversa = scan.nextLine();
 
         Conversation conversa = new Conversation(idConversa, textoConversa, Arrays.asList("Vendedor", "Cliente"));
 
-        System.out.println("\n[Aguarde] Enviando texto para o motor cognitivo TOTVS...");
+        System.out.println("\n  Analisando...\n");
 
         Analyzer nlp = new Analyzer("Context-NLP-v1.0");
         Analysis analise = nlp.analyze(conversa);
@@ -42,20 +41,43 @@ public class Main {
         InsightService service = new InsightService(7.0);
         List<Insight> alertas = service.generate(analise);
 
-        System.out.println("\n======================================================");
-        System.out.println("                RELATÓRIO DE INSIGHTS                 ");
-        System.out.println("======================================================");
+        // ── Métricas ─────────────────────────────────────────────
+        System.out.println("  Metricas");
+        System.out.println("  --------");
+        System.out.printf("  Produtividade   %.1f / 10%n", analise.getProductivity());
+        System.out.printf("  Sentimento      %.1f / 10  %s%n",
+                analise.getSentiment(),
+                analise.getSentiment() >= 7.0 ? "(positivo)" : "(negativo)");
+        System.out.printf("  Resolucao       %.1f / 10%n", analise.getResolution());
 
-        System.out.println("DEBUG - Produtividade lida: " + analise.getProductivity());
-        System.out.println("DEBUG - Sentimento lido: " + analise.getSentiment());
-        System.out.println("DEBUG - Quantidade de alertas gerados: " + alertas.size());
+        // ── Insights ─────────────────────────────────────────────
+        System.out.println("\n  Insights  (" + alertas.size() + " encontrados)");
+        System.out.println("  --------");
 
+        int risco = 0, negocio = 0, info = 0;
         for (Insight alerta : alertas) {
-            System.out.println(">> " + alerta.getMessage());
+            String msg = alerta.getMessage();
+            if (msg.startsWith("[ALERTA")) {
+                risco++;
+                System.out.println("  \u001B[31m! " + msg + "\u001B[0m");
+            } else if (msg.startsWith("[OPORTUNIDADE")) {
+                negocio++;
+                System.out.println("  \u001B[32m+ " + msg + "\u001B[0m");
+            } else {
+                info++;
+                System.out.println("  \u001B[33m· " + msg + "\u001B[0m");
+            }
         }
 
-        System.out.println("======================================================\n");
-        scan.close();
+        // ── Resumo ────────────────────────────────────────────────
+        System.out.println("\n  Resumo");
+        System.out.println("  ------");
+        System.out.println("  \u001B[31mRiscos         " + risco + "\u001B[0m");
+        System.out.println("  \u001B[32mOportunidades  " + negocio + "\u001B[0m");
+        System.out.println("  \u001B[33mInformacoes    " + info + "\u001B[0m");
+        System.out.println("  \u001B[90mReuniao        " + idConversa + "\u001B[0m");
+        System.out.println();
 
+        scan.close();
     }
 }
