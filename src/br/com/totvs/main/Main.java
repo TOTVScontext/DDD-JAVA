@@ -76,8 +76,25 @@ public class Main {
         System.out.println("  \u001B[32mOportunidades  " + negocio + "\u001B[0m");
         System.out.println("  \u001B[33mInformacoes    " + info + "\u001B[0m");
         System.out.println("  \u001B[90mReuniao        " + idConversa + "\u001B[0m");
-        System.out.println();
 
+        // ── Relatório ─────────────────────────────────────────────
+        System.out.println("\n  Relatorio");
+        System.out.println("  ---------");
+        System.out.print("  Gerar relatorio detalhado para a equipe? (s/n): ");
+        String resposta = scan.nextLine().trim().toLowerCase();
+
+        if (resposta.equals("s")) {
+            System.out.println("  Gerando documento...");
+            String caminho = ReportGenerator.generate(conversa, analise, alertas);
+            if (caminho != null) {
+                System.out.println("  \u001B[32mRelatorio salvo em:\u001B[0m");
+                System.out.println("  \u001B[32m" + caminho + "\u001B[0m");
+            } else {
+                System.out.println("  \u001B[31mErro ao gerar o relatorio. Verifique se o Node.js esta instalado.\u001B[0m");
+            }
+        }
+
+        System.out.println();
         scan.close();
     }
 }
