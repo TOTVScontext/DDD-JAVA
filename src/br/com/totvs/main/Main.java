@@ -84,13 +84,22 @@ public class Main {
         String resposta = scan.nextLine().trim().toLowerCase();
 
         if (resposta.equals("s")) {
-            System.out.println("  Gerando documento...");
-            String caminho = ReportGenerator.generate(conversa, analise, alertas);
+            System.out.println();
+            String caminho = ReportGenerator.generate(conversa, analise, alertas, scan);
+            System.out.println();
             if (caminho != null) {
                 System.out.println("  \u001B[32mRelatorio salvo em:\u001B[0m");
                 System.out.println("  \u001B[32m" + caminho + "\u001B[0m");
+                System.out.print("\n  Abrir o arquivo agora? (s/n): ");
+                if (scan.nextLine().trim().equalsIgnoreCase("s")) {
+                    try {
+                        java.awt.Desktop.getDesktop().open(new java.io.File(caminho));
+                    } catch (Exception e) {
+                        System.out.println("  \u001B[33mNao foi possivel abrir automaticamente. Acesse o caminho acima.\u001B[0m");
+                    }
+                }
             } else {
-                System.out.println("  \u001B[31mErro ao gerar o relatorio. Verifique se o Node.js esta instalado.\u001B[0m");
+                System.out.println("  \u001B[31mErro ao gerar o relatorio.\u001B[0m");
             }
         }
 

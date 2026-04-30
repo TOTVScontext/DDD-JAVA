@@ -22,7 +22,8 @@ public class ReportGenerator {
     private static final String FUNDO_OPO   = "F0FFF4";
     private static final String FUNDO_INFO  = "FFFBF0";
 
-    public static String generate(Conversation conversa, Analysis analise, List<Insight> insights) {
+    public static String generate(Conversation conversa, Analysis analise,
+                                  List<Insight> insights, java.util.Scanner scan) {
         String idReuniao     = conversa.getId();
         String transcricao   = conversa.getText();
         String participantes = String.join(", ", conversa.getParticipants());
@@ -37,8 +38,34 @@ public class ReportGenerator {
                 .filter(m -> !m.startsWith("[ALERTA") && !m.startsWith("[OPORTUNIDADE"))
                 .collect(Collectors.toList());
 
-        String outputPath = System.getProperty("user.home") + File.separator
-                + "relatorio-" + idReuniao + ".docx";
+        String nomeArquivo = "relatorio-" + idReuniao + ".docx";
+        String padrão      = System.getProperty("user.home") + File.separator + nomeArquivo;
+
+        System.out.println("  Onde salvar o relatorio?");
+        System.out.println("  \u001B[90m  Exemplo Windows : C:\\Users\\guiam\\Documents\\" + nomeArquivo + "\u001B[0m");
+        System.out.println("  \u001B[90m  Exemplo Mac/Linux: /home/guiam/documentos/" + nomeArquivo + "\u001B[0m");
+        System.out.print("  Caminho (Enter para salvar em " + padrão + "): ");
+
+        String entrada = scan.nextLine().trim();
+        String outputPath;
+
+        if (entrada.isEmpty()) {
+            outputPath = padrão;
+        } else {
+            // Se o usuario digitou so uma pasta, adiciona o nome do arquivo
+            File f = new File(entrada);
+            if (f.isDirectory() || entrada.endsWith(File.separator) || entrada.endsWith("/") || entrada.endsWith("\\")) {
+                outputPath = entrada + File.separator + nomeArquivo;
+            } else {
+                outputPath = entrada.endsWith(".docx") ? entrada : entrada + ".docx";
+            }
+        }
+
+        // Garante que a pasta existe
+        File arquivo = new File(outputPath);
+        if (arquivo.getParentFile() != null && !arquivo.getParentFile().exists()) {
+            arquivo.getParentFile().mkdirs();
+        }
 
         try {
             gerarDocx(outputPath, idReuniao, transcricao, participantes, dataHora,
