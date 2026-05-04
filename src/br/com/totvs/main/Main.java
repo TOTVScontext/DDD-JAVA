@@ -6,10 +6,26 @@ import java.util.List;
 import java.util.Arrays;
 
 public class Main {
+    private static String clean(String msg) {
+        return msg
+                .replaceAll("\\[ALERTA.*?\\]\\s*", "")
+                .replaceAll("\\[OPORTUNIDADE.*?\\]\\s*", "")
+                .trim();
+    }
+
     public static void main(String[] args) {
+        final String RESET = "\u001B[0m";
+        final String PRIMARY = "\u001B[38;5;111m";
+        final String SECONDARY = "\u001B[38;5;110m";
+        final String MUTED = "\u001B[38;5;245m";
+
+        final String GREEN = "\u001B[38;5;114m";
+        final String RED = "\u001B[38;5;210m";
+        final String YELLOW = "\u001B[38;5;222m";
+
         Scanner scan = new Scanner(System.in);
         System.out.print(
-                "\n" +
+                        "\n" +
                         "\u001B[38;2;80;160;255m████████╗\u001B[38;2;75;150;250m ██████╗\u001B[38;2;70;140;245m ████████╗\u001B[38;2;65;130;240m██╗   ██╗\u001B[38;2;60;120;235m███████╗\n" +
                         "\u001B[38;2;75;150;250m╚══██╔══╝\u001B[38;2;70;140;245m██╔═══██╗\u001B[38;2;65;130;240m╚══██╔══╝\u001B[38;2;60;120;235m██║   ██║\u001B[38;2;55;110;230m██╔════╝\n" +
                         "\u001B[38;2;70;140;245m   ██║\u001B[38;2;65;130;240m   ██║   ██║\u001B[38;2;60;120;235m   ██║\u001B[38;2;55;110;230m   ██║   ██║\u001B[38;2;50;100;225m███████╗\n" +
@@ -23,83 +39,115 @@ public class Main {
                         "\u001B[38;2;30;60;205m╚██████╗\u001B[38;2;25;50;200m╚██████╔╝██║ ╚████║   ██║   ███████╗██╔╝ ██╗   ██║\n" +
                         "\u001B[38;2;25;50;200m ╚═════╝\u001B[38;2;20;40;195m ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝\u001B[0m\n"
         );
-        System.out.println("  Inteligencia de Interacoes Corporativas\n");
+        System.out.println("\n"+" ".repeat(9)+PRIMARY+"✦"+RESET+" Inteligência de Interações Corporativas "+PRIMARY+"✦"+RESET+"\n"+" ".repeat(9));
 
-        System.out.print("ID da reuniao: ");
+        System.out.print(MUTED+"─".repeat(200)+RESET+"\nID da Reunião\n"+MUTED+"─".repeat(200)+PRIMARY+"\n> "+RESET);
         String idConversa = scan.nextLine();
 
-        System.out.print("Transcricao: ");
+        System.out.print("\n"+MUTED+"─".repeat(200)+RESET+"\nTranscrição\n"+MUTED+"─".repeat(200)+PRIMARY+"\n> "+RESET);
         String textoConversa = scan.nextLine();
 
         Conversation conversa = new Conversation(idConversa, textoConversa, Arrays.asList("Vendedor", "Cliente"));
 
-        System.out.println("\n  Analisando...\n");
+        System.out.println("\n\n"+MUTED+"─".repeat(200)+"\n"+PRIMARY+"✦"+RESET+" Análise finalizada!\n"+MUTED+"─".repeat(200));
 
-        Analyzer nlp = new Analyzer("Context-NLP-v1.0");
+        Analyzer nlp = new Analyzer("context v0.1.8");
         Analysis analise = nlp.analyze(conversa);
 
         InsightService service = new InsightService(7.0);
         List<Insight> alertas = service.generate(analise);
 
-        // ── Métricas ─────────────────────────────────────────────
-        System.out.println("  Metricas");
-        System.out.println("  --------");
-        System.out.printf("  Produtividade   %.1f / 10%n", analise.getProductivity());
-        System.out.printf("  Sentimento      %.1f / 10  %s%n",
-                analise.getSentiment(),
-                analise.getSentiment() >= 7.0 ? "(positivo)" : "(negativo)");
-        System.out.printf("  Resolucao       %.1f / 10%n", analise.getResolution());
 
-        // ── Insights ─────────────────────────────────────────────
-        System.out.println("\n  Insights  (" + alertas.size() + " encontrados)");
-        System.out.println("  --------");
+        java.util.function.Function<Double, String> bar = (value) -> {
+            int total = 10;
+            int filled = (int) Math.round(value);
+            StringBuilder b = new StringBuilder();
+            for (int i = 0; i < total; i++) {
+                b.append(i < filled ? "█" : "░");
+            }
+            return b.toString();
+        };
+
+        // HEADER
+        System.out.println(PRIMARY + "\n\nANALYSIS · CONVERSA " + idConversa + RESET);
+        System.out.println(MUTED + "─".repeat(200) + RESET);
+
+        // METRICS
+        System.out.println();
+        System.out.println(SECONDARY + "METRICS" + RESET);
+
+        System.out.printf("  %-18s %5.1f/10   %s%n",
+                "Produtividade",
+                analise.getProductivity(),
+                bar.apply(analise.getProductivity()));
+
+        System.out.printf("  %-18s %5.1f/10   %s   %s%n",
+                "Sentimento",
+                analise.getSentiment(),
+                bar.apply(analise.getSentiment()),
+                analise.getSentiment() >= 7 ? GREEN + "positivo" + RESET : RED + "negativo" + RESET);
+
+        System.out.printf("  %-18s %5.1f/10   %s%n",
+                "Resolucao",
+                analise.getResolution(),
+                bar.apply(analise.getResolution()));
+
+        // INSIGHTS
+        System.out.println();
+        System.out.println(SECONDARY + "INSIGHTS (" + alertas.size() + ")" + RESET);
 
         int risco = 0, negocio = 0, info = 0;
+
         for (Insight alerta : alertas) {
             String msg = alerta.getMessage();
+
             if (msg.startsWith("[ALERTA")) {
                 risco++;
-                System.out.println("  \u001B[31m! " + msg + "\u001B[0m");
+                System.out.println("  " + RED + "⚠ " + clean(msg) + RESET);
             } else if (msg.startsWith("[OPORTUNIDADE")) {
                 negocio++;
-                System.out.println("  \u001B[32m+ " + msg + "\u001B[0m");
+                System.out.println("  " + GREEN + "↑ " + clean(msg) + RESET);
             } else {
                 info++;
-                System.out.println("  \u001B[33m· " + msg + "\u001B[0m");
+                System.out.println("  " + MUTED + "• " + msg + RESET);
             }
         }
 
-        // ── Resumo ────────────────────────────────────────────────
-        System.out.println("\n  Resumo");
-        System.out.println("  ------");
-        System.out.println("  \u001B[31mRiscos         " + risco + "\u001B[0m");
-        System.out.println("  \u001B[32mOportunidades  " + negocio + "\u001B[0m");
-        System.out.println("  \u001B[33mInformacoes    " + info + "\u001B[0m");
-        System.out.println("  \u001B[90mReuniao        " + idConversa + "\u001B[0m");
+        // SUMMARY
+        System.out.println();
+        System.out.println(SECONDARY + "SUMMARY" + RESET);
 
-        // ── Relatório ─────────────────────────────────────────────
-        System.out.println("\n  Relatorio");
-        System.out.println("  ---------");
-        System.out.print("  Gerar relatorio detalhado para a equipe? (s/n): ");
+        System.out.printf("  %-16s %s%d%s%n", "Riscos", RED, risco, RESET);
+        System.out.printf("  %-16s %s%d%s%n", "Oportunidades", GREEN, negocio, RESET);
+        System.out.printf("  %-16s %s%d%s%n", "Informacoes", YELLOW, info, RESET);
+
+        // FOOTER
+        System.out.println();
+        System.out.println(MUTED + "─".repeat(200) + RESET);
+
+        // INPUT
+        System.out.print("Gerar relatorio detalhado? (s/n): ");
         String resposta = scan.nextLine().trim().toLowerCase();
 
         if (resposta.equals("s")) {
             System.out.println();
+
             String caminho = ReportGenerator.generate(conversa, analise, alertas, scan);
-            System.out.println();
+
             if (caminho != null) {
-                System.out.println("  \u001B[32mRelatorio salvo em:\u001B[0m");
-                System.out.println("  \u001B[32m" + caminho + "\u001B[0m");
-                System.out.print("\n  Abrir o arquivo agora? (s/n): ");
+                System.out.println(GREEN + "Relatorio gerado com sucesso" + RESET);
+                System.out.println(MUTED + caminho + RESET);
+
+                System.out.print("\nAbrir agora? (s/n): ");
                 if (scan.nextLine().trim().equalsIgnoreCase("s")) {
                     try {
                         java.awt.Desktop.getDesktop().open(new java.io.File(caminho));
                     } catch (Exception e) {
-                        System.out.println("  \u001B[33mNao foi possivel abrir automaticamente. Acesse o caminho acima.\u001B[0m");
+                        System.out.println(YELLOW + "Nao foi possivel abrir automaticamente" + RESET);
                     }
                 }
             } else {
-                System.out.println("  \u001B[31mErro ao gerar o relatorio.\u001B[0m");
+                System.out.println(RED + "Erro ao gerar relatorio" + RESET);
             }
         }
 

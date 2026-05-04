@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+
 
 public class ReportGenerator {
 
@@ -38,19 +41,20 @@ public class ReportGenerator {
                 .filter(m -> !m.startsWith("[ALERTA") && !m.startsWith("[OPORTUNIDADE"))
                 .collect(Collectors.toList());
 
-        String nomeArquivo = "relatorio-" + idReuniao + ".docx";
-        String padrão      = System.getProperty("user.home") + File.separator + nomeArquivo;
+        String nomeArquivo = "analise-" + idReuniao + ".docx";
+        File documentos = FileSystemView.getFileSystemView().getDefaultDirectory();
+        String padrao = documentos.getAbsolutePath() + File.separator + nomeArquivo;
 
         System.out.println("  Onde salvar o relatorio?");
-        System.out.println("  \u001B[90m  Exemplo Windows : C:\\Users\\guiam\\Documents\\" + nomeArquivo + "\u001B[0m");
-        System.out.println("  \u001B[90m  Exemplo Mac/Linux: /home/guiam/documentos/" + nomeArquivo + "\u001B[0m");
-        System.out.print("  Caminho (Enter para salvar em " + padrão + "): ");
+        System.out.println("  \u001B[90m  Exemplo Windows : C:\\Users\\user\\Documents\\" + nomeArquivo + "\u001B[0m");
+        System.out.println("  \u001B[90m  Exemplo Mac/Linux: /home/user/documentos/" + nomeArquivo + "\u001B[0m");
+        System.out.print("\n  Caminho (Enter para salvar em " + padrao + "): ");
 
         String entrada = scan.nextLine().trim();
         String outputPath;
 
         if (entrada.isEmpty()) {
-            outputPath = padrão;
+            outputPath = padrao;
         } else {
             // Se o usuario digitou so uma pasta, adiciona o nome do arquivo
             File f = new File(entrada);
