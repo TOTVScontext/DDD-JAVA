@@ -8,7 +8,8 @@ A solução foi estruturada sob os princípios de **Domain-Driven Design (DDD)**
 ## 📐 Modelagem do Sistema (UML)
 Abaixo está a representação visual da nossa arquitetura, detalhando as entidades do domínio, suas relações e a aplicação de herança/polimorfismo.
 
-<img width="4326" height="4662" alt="UML -DDDJava(challenge) drawio" src="https://github.com/user-attachments/assets/5f3af890-eb4c-4495-8d08-9903db83e89a" />
+<img width="4416" height="5112" alt="DDD_Challenge drawio" src="https://github.com/user-attachments/assets/4f79b11f-a222-4eee-8466-a406216a3317" />
+ 
 
 
 ## 🚀 Arquitetura e Padrões
