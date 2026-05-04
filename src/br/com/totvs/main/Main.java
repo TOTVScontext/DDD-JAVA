@@ -1,6 +1,8 @@
 package br.com.totvs.main;
 
 import br.com.totvs.domain.*;
+import br.com.totvs.infrastructure.ReportGenerator;
+
 import java.util.Scanner;
 import java.util.List;
 import java.util.Arrays;

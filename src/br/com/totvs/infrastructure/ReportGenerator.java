@@ -1,4 +1,8 @@
-package br.com.totvs.domain;
+package br.com.totvs.infrastructure;
+
+import br.com.totvs.domain.Analysis;
+import br.com.totvs.domain.Conversation;
+import br.com.totvs.domain.Insight;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
