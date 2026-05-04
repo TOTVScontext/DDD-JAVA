@@ -36,20 +36,20 @@ public class Main {
                         "\u001B[38;2;45;90;220m██╔════╝\u001B[38;2;40;80;215m██╔═══██╗████╗  ██║╚══██╔══╝██╔════╝╚██╗██╔╝╚══██╔══╝\n" +
                         "\u001B[38;2;40;80;215m██║\u001B[38;2;35;70;210m     ██║   ██║██╔██╗ ██║   ██║   █████╗   ╚███╔╝    ██║\n" +
                         "\u001B[38;2;35;70;210m██║\u001B[38;2;30;60;205m     ██║   ██║██║╚██╗██║   ██║   ██╔══╝   ██╔██╗    ██║\n" +
-                        "\u001B[38;2;30;60;205m╚██████╗\u001B[38;2;25;50;200m╚██████╔╝██║ ╚████║   ██║   ███████╗██╔╝ ██╗   ██║\n" +
-                        "\u001B[38;2;25;50;200m ╚═════╝\u001B[38;2;20;40;195m ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝\u001B[0m\n"
+                        "\u001B[38;2;30;60;205m╚██████╗\u001B[38;2;25;50;150m╚██████╔╝██║ ╚████║   ██║   ███████╗██╔╝ ██╗   ██║\n" +
+                        "\u001B[38;2;25;50;150m ╚═════╝\u001B[38;2;20;40;195m ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝\u001B[0m\n"
         );
         System.out.println("\n"+" ".repeat(9)+PRIMARY+"✦"+RESET+" Inteligência de Interações Corporativas "+PRIMARY+"✦"+RESET+"\n"+" ".repeat(9));
 
-        System.out.print(MUTED+"─".repeat(200)+RESET+"\nID da Reunião\n"+MUTED+"─".repeat(200)+PRIMARY+"\n> "+RESET);
+        System.out.print(MUTED+"─".repeat(150)+RESET+"\nID da Reunião\n"+MUTED+"─".repeat(150)+PRIMARY+"\n> "+RESET);
         String idConversa = scan.nextLine();
 
-        System.out.print("\n"+MUTED+"─".repeat(200)+RESET+"\nTranscrição\n"+MUTED+"─".repeat(200)+PRIMARY+"\n> "+RESET);
+        System.out.print("\n"+MUTED+"─".repeat(150)+RESET+"\nTranscrição\n"+MUTED+"─".repeat(150)+PRIMARY+"\n> "+RESET);
         String textoConversa = scan.nextLine();
 
         Conversation conversa = new Conversation(idConversa, textoConversa, Arrays.asList("Vendedor", "Cliente"));
 
-        System.out.println("\n\n"+MUTED+"─".repeat(200)+"\n"+PRIMARY+"✦"+RESET+" Análise finalizada!\n"+MUTED+"─".repeat(200));
+        System.out.println("\n\n"+MUTED+"─".repeat(150)+"\n"+PRIMARY+"✦"+RESET+" Análise finalizada!\n"+MUTED+"─".repeat(150));
 
         Analyzer nlp = new Analyzer("context v0.1.8");
         Analysis analise = nlp.analyze(conversa);
@@ -70,7 +70,7 @@ public class Main {
 
         // HEADER
         System.out.println(PRIMARY + "\n\nANALYSIS · CONVERSA " + idConversa + RESET);
-        System.out.println(MUTED + "─".repeat(200) + RESET);
+        System.out.println(MUTED + "─".repeat(150) + RESET);
 
         // METRICS
         System.out.println();
@@ -123,7 +123,7 @@ public class Main {
 
         // FOOTER
         System.out.println();
-        System.out.println(MUTED + "─".repeat(200) + RESET);
+        System.out.println(MUTED + "─".repeat(150) + RESET);
 
         // INPUT
         System.out.print("Gerar relatorio detalhado? (s/n): ");
