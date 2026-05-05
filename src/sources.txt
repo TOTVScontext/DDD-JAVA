@@ -1,0 +1,9 @@
+C:\Users\labsfiap\CLI-Java\src\br\com\totvs\domain\Analysis.java
+C:\Users\labsfiap\CLI-Java\src\br\com\totvs\domain\Analyzer.java
+C:\Users\labsfiap\CLI-Java\src\br\com\totvs\domain\BusinessInsight.java
+C:\Users\labsfiap\CLI-Java\src\br\com\totvs\domain\Conversation.java
+C:\Users\labsfiap\CLI-Java\src\br\com\totvs\domain\Insight.java
+C:\Users\labsfiap\CLI-Java\src\br\com\totvs\domain\InsightService.java
+C:\Users\labsfiap\CLI-Java\src\br\com\totvs\domain\RiskInsight.java
+C:\Users\labsfiap\CLI-Java\src\br\com\totvs\infrastructure\ReportGenerator.java
+C:\Users\labsfiap\CLI-Java\src\br\com\totvs\main\Main.java
